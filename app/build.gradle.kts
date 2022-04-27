@@ -7,6 +7,8 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.5.31"
@@ -29,6 +31,13 @@ dependencies {
 
     // This dependency is used by the application.
     implementation("com.google.guava:guava:30.1.1-jre")
+
+    // AWS
+    implementation("com.amazonaws:aws-lambda-java-core:1.2.1")
+    implementation("com.amazonaws:aws-lambda-java-events:3.11.0")
+    runtimeOnly("com.amazonaws:aws-lambda-java-log4j2:1.5.1")
+    
+    implementation("com.google.code.gson:gson:2.9.0")
 }
 
 testing {
@@ -44,4 +53,18 @@ testing {
 application {
     // Define the main class for the application.
     mainClass.set("AddFive.AppKt")
+}
+
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "11"
+    }
+
+    register<Zip>("buildZip") {
+        from(compileKotlin)
+        from(processResources)
+        into("lib") {
+            from(configurations.runtimeClasspath)
+        }
+    }
 }

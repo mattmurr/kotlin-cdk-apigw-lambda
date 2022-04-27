@@ -1,0 +1,6 @@
+POST https://wcspg5er9j.execute-api.eu-west-2.amazonaws.com/prod/ HTTP/1.1
+content-type: application/json
+
+{
+  "input": 5
+}
